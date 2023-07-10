@@ -22,9 +22,15 @@ if __name__ == '__main__':
 #    r.rotfront(0)
 #    r.rotdown(0)
 #    r.rotright(1)
-
+    s.check_edge_list(r)
     s.step_1(r)
-
+    s.check_edge_list(r)
+    r.print()
+    #r.shuffle()
+    #s.check_edge_list(r)
+#    r.print()
+#    r.rot_cube_left_cw()
+#    r.print()
 #right, left, up, down, front
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
