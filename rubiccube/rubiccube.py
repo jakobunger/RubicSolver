@@ -13,7 +13,7 @@ class Rubiccube():
         #        self.bottom = np.array([['y', 'y', 'y'], ['y', 'y', 'y'], ['y', 'y', 'y']], dtype=str)
         #        self.back = np.array([['b', 'b', 'b'], ['b', 'b', 'b'], ['b', 'b', 'b']], dtype=str)
         #        self.front = np.array([['g', 'g', 'g'], ['g', 'g', 'g'], ['g', 'g', 'g']], dtype=str)
-
+        # Initialize rubic cube
         self.top = np.array([['w1', 'w2', 'w3'], ['w4', 'w5', 'w6'], ['w7', 'w8', 'w9']], dtype=str)
         self.left = np.array([['o1', 'o2', 'o3'], ['o4', 'o5', 'o6'], ['o7', 'o8', 'o9']], dtype=str)
         self.right = np.array([['r1', 'r2', 'r3'], ['r4', 'r5', 'r6'], ['r7', 'r8', 'r9']], dtype=str)
@@ -35,6 +35,7 @@ class Rubiccube():
         print("bottom")
         print(self.bottom)
 
+    # Left side rotation clockwise and counter-clockwise (inverse)
     def rotleft(self, inverse=0):
         if inverse == 0:
             tempcol = copy.copy(self.top[:, 0])
@@ -52,6 +53,7 @@ class Rubiccube():
             self.left = np.rot90(self.left, k=1)  # counter-clockwise
         return "rotleft("+str(inverse)+")"
 
+    # Right side rotation clockwise and counter-clockwise (inverse)
     def rotright(self, inverse=0):
         if inverse == 0:
             tempcol = copy.copy(self.top[:, 2])
@@ -69,76 +71,81 @@ class Rubiccube():
             self.right = np.rot90(self.right, k=1)  # counter-clockwise
         return "rotright(" + str(inverse) + ")"
 
+    # Upper side rotation clockwise and counter-clockwise (inverse)
     def rotup(self, inverse=0):
         if inverse == 0:
             tempcol = copy.copy(self.front[0, :])
             self.front[0, :] = self.right[0, :]
-            self.right[0, :] = self.back[2, :]
-            self.back[2, :] = self.left[0, :]
+            self.right[0, :] = (np.flip(self.back[2, :]))
+            self.back[2, :] = (np.flip(self.left[0, :]))
             self.left[0, :] = tempcol
             self.top = np.rot90(self.top, k=3)  # clockwise
         if inverse == 1:
             tempcol = copy.copy(self.front[0, :])
             self.front[0, :] = self.left[0, :]
-            self.left[0, :] = self.back[2, :]
-            self.back[2, :] = self.right[0, :]
+            self.left[0, :] = (np.flip(self.back[2, :]))
+            self.back[2, :] = (np.flip(self.right[0, :]))
             self.right[0, :] = tempcol
             self.top = numpy.rot90(self.top, k=1)  # counter-clockwise
         return "rotup(" + str(inverse) + ")"
 
+    # ^Lower side rotation clockwise and counter-clockwise (inverse)
     def rotdown(self, inverse=0):
         if inverse == 0:
             tempcol = copy.copy(self.front[2, :])
             self.front[2, :] = self.left[2, :]
-            self.left[2, :] = self.back[0, :]
-            self.back[0, :] = self.right[2, :]
+            self.left[2, :] = (np.flip(self.back[0, :]))
+            self.back[0, :] = (np.flip(self.right[2, :]))
             self.right[2, :] = tempcol
             self.bottom = np.rot90(self.bottom, k=3)  # clockwise
         if inverse == 1:
             tempcol = copy.copy(self.front[2, :])
             self.front[2, :] = self.right[2, :]
-            self.right[2, :] = self.back[0, :]
-            self.back[0, :] = self.left[2, :]
+            self.right[2, :] = (np.flip(self.back[0, :]))
+            self.back[0, :] = (np.flip(self.left[2, :]))
             self.left[2, :] = tempcol
             self.bottom = numpy.rot90(self.bottom, k=1)  # counter-clockwise
         return "rotdown(" + str(inverse) + ")"
 
+    # Front side rotation clockwise and counter-clockwise (inverse)
     def rotfront(self, inverse=0):
         if inverse == 0:
             tempcol = copy.copy(self.top[2, :])
-            self.top[2, :] = self.left[:, 2]
+            self.top[2, :] = np.flip(self.left[:, 2])
             self.left[:, 2] = self.bottom[0, :]
-            self.bottom[0, :] = self.right[:, 0]
+            self.bottom[0, :] = np.flip(self.right[:, 0])
             self.right[:, 0] = tempcol
             self.front = np.rot90(self.front, k=3)  # clockwise
         if inverse == 1:
             tempcol = copy.copy(self.top[2, :])
-            self.top[2, :] = self.right[:, 0]
-            self.right[:, 0] = self.bottom[0, :]
-            self.bottom[0, :] = self.left[:, 2]
-            self.left[:, 2] = tempcol
+            self.top[2, :] = (self.right[:, 0])
+            self.right[:, 0] = np.flip(self.bottom[0, :])
+            self.bottom[0, :] = (self.left[:, 2])
+            self.left[:, 2] = np.flip(tempcol)
             self.front = np.rot90(self.front, k=1)  # counter-clockwise
         return "rotfront(" + str(inverse) + ")"
 
-    def rot_cube_up(self, inverse= 0):
-        if inverse==0:
+    # Rotate the entire cube downwards clockwise and upwards (inverse)
+    def rot_cube_down_cw(self, inverse= 0):
+        if inverse == 0:
+            self.left = np.rot90(self.left, k=3)  # clockwise
+            self.right = np.rot90(self.right, k=1)  # counter-clockwise
+            tempface = self.top
+            self.top = self.back
+            self.back = self.bottom
+            self.bottom = self.front
+            self.front = tempface
+        if inverse == 1:
             self.left = np.rot90(self.left, k=1)  # counter-clockwise
             self.right = np.rot90(self.right, k=3)  # clockwise
             tempface = copy.copy(self.top)
-            self.top = copy.copy(self.front)
-            self.front = copy.copy(self.bottom)
-            self.bottom = np.flipud(self.back)
-            self.back = np.flipud(tempface)
-        if inverse == 1:
-            self.left = np.rot90(self.left, k=3)  # clockwise
-            self.right = np.rot90(self.right, k=1)  # counter-clockwise
-            tempface = copy.copy(self.top)
-            self.top = np.flipud(self.back)
-            self.back = np.flipud(self.bottom)
-            self.bottom = self.front
-            self.front = tempface
+            self.top = self.front
+            self.front = self.bottom
+            self.bottom = self.back
+            self.back = tempface
         return "rot_cube_up(" + str(inverse) + ")"
 
+    # Rotate the entire cube clockwise and counter-clockwise (inverse)
     def rot_cube_left_cw(self, inverse=0):
         if inverse == 0:
             self.top = np.rot90(self.top, k=3)  # clockwise
