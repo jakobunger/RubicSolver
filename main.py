@@ -18,25 +18,13 @@ if __name__ == '__main__':
     r = rc.Rubiccube()
     s = sol.Solver()
     r.shuffle()
-
-    #r.rotfront(0)
-    r.rotdown(1)
-    #r.rotfront(1)
-    r.rotleft(0)
-    r.rotright()
-    r.rotup()
-    r.rotdown()
-    r.rotright()
-    r.rotfront(1)
-
     #s.check_edge_list(r)
     #s.check_corner_list(r)
     s.step_1(r)
     s.step_2(r)
-    #r.print()
-    #r.shuffle()
-    #s.check_edge_list(r)
-#    r.print()
+    s.step_3(r)
+    r.print()
+
 #    r.rot_cube_left_cw()
 #    r.print()
 #right, left, up, down, front

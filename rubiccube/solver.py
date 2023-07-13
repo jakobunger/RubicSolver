@@ -140,14 +140,11 @@ class Solver():
             # source in row 0
             if s == [0, 1, 0]:
                 cube.rotdown()
-                cube.print()
             if s == [1, 2, 0]:
                 cube.rotdown()
                 cube.rotdown()
-                cube.print()
             if s == [2, 1, 0]:
                 cube.rotdown(1)
-                cube.print()
 
             # source in row 1
             if s == [0, 0, 1]:
@@ -224,6 +221,10 @@ class Solver():
             # move on to next side
             cube.rot_cube_left_cw()
 
+        assert cube.top[0, 1] == 'w2'
+        assert np.array_equal(cube.top[1], ['w4', 'w5', 'w6'])
+        assert cube.top[2, 1] == 'w8'
+
 
     # Second step of algorithm: put all white corners to the correct opsition
     def step_2(self, cube: rb):
@@ -245,13 +246,22 @@ class Solver():
                 cube.rotleft(1)
             elif source_corner_pos == [2, 2, 2]:
                 cube.rotright()
-                cube.rotdown(1)
+                cube.rotdown()
                 cube.rotright(1)
+                cube.rotdown(1)
+                cube.rotdown(1)
+
             elif source_corner_pos == [2, 0, 2]:
                 # correct position, check if alignment is correct
-                if cube.front[0, 2] == cube.front[1, 1] and cube.top[2, 2] == cube.top[1, 1] and cube.right[0, 0] == cube.right[1, 1]:
-                    # yes, continue with next side
+                if cube.front[0, 2][0] == cube.front[1, 1][0] and cube.top[2, 2][0] == cube.top[1, 1][0] and cube.right[0, 0][0] == cube.right[1, 1][0]:
+                    # alignment correct, continue with next side
+                    cube.rot_cube_left_cw()
                     continue
+                else:
+                    cube.rotright(1)
+                    cube.rotdown(1)
+                    cube.rotright()
+                    cube.rotdown()
             elif source_corner_pos == [0, 2, 0]:
                 cube.rotdown()
                 cube.rotdown()
@@ -260,7 +270,127 @@ class Solver():
             elif source_corner_pos == [2, 2, 0]:
                 cube.rotdown(1)
 
-            x=0
+            for k in range(0, 10):
+                cube.rotright(1)
+                cube.rotdown(1)
+                cube.rotright()
+                cube.rotdown()
+                if cube.front[0, 2][0] == cube.front[1, 1][0] and cube.top[2, 2][0] == cube.top[1, 1][0] and cube.right[0, 0][0] == cube.right[1, 1][0]:
+                    break
+                if k == 10:
+                    assert 0
 
- #               [0, 2, 2], [0, 0, 2], [2, 2, 2], [2, 0, 2],
-#                      [0, 2, 0], [0, 0, 0], [2, 2, 0], [2, 0, 0]
+            cube.rot_cube_left_cw()
+
+        assert np.array_equal(cube.top[0], ['w1', 'w2', 'w3'])
+        assert np.array_equal(cube.top[1], ['w4', 'w5', 'w6'])
+        assert np.array_equal(cube.top[2], ['w7', 'w8', 'w9'])
+
+    # Third step of algorithm: put all mid level edges to the correct position
+    def step_3(self, cube: rb):
+
+        cube.rot_cube_down_cw()
+        cube.rot_cube_down_cw()
+
+        source_edges = [['b', 'o'], ['b', 'r'], ['g', 'r'], ['g', 'o']]
+        source = []
+        source_colors = []
+
+        while source_edges:
+            source = []
+            for i in range(0, len(source_edges)):
+                source_edge_pos = self.get_edge(cube, source_edges[i][0], source_edges[i][1])
+
+                if source_edge_pos[2] < 2:
+                    continue
+
+                source = source_edge_pos
+                source_colors = [source_edges[i][0], source_edges[i][1]]
+
+            if not source:
+                # move source edge to top row
+                source = self.get_edge(cube, source_edges[i][0], source_edges[i][1])
+                if not source:
+                    assert 0
+
+                rot_action = -1;
+                if source == [0, 0, 1]:
+                    # rot left
+                    rot_action = 0
+                if source == [2, 0, 1]:
+                    # rot right
+                    rot_action = 1
+                if source == [0, 2, 1]:
+                    cube.rot_cube_left_cw(1)
+                    # rot left
+                    rot_action = 0
+                if source == [2, 2, 1]:
+                    cube.rot_cube_left_cw()
+                    # rot right
+                    rot_action = 1
+
+                if rot_action == 0:
+                    cube.rotup(1)
+                    cube.rotleft(1)
+                    cube.rotup()
+                    cube.rotleft()
+                    cube.rotup()
+                    cube.rotfront()
+                    cube.rotup(1)
+                    cube.rotfront(1)
+                if rot_action == 1:
+                    cube.rotup()
+                    cube.rotright()
+                    cube.rotup(1)
+                    cube.rotright(1)
+                    cube.rotup(1)
+                    cube.rotfront(1)
+                    cube.rotup()
+                    cube.rotfront()
+                if rot_action == -1:
+                    assert 0
+                continue
+
+            if source == [1, 2, 2]:
+                cube.rot_cube_left_cw(1)
+                cube.rot_cube_left_cw(1)
+            if source == [0, 1, 2]:
+                cube.rot_cube_left_cw(1)
+            if source == [2, 1, 2]:
+                cube.rot_cube_left_cw()
+
+            for i in range(0, 4):
+                if cube.front[0, 1][0] == cube.front[1, 1][0]:
+                    break
+                cube.rot_cube_left_cw()
+                cube.rotup(1)
+
+            # check if we need to rotate it clock- or counterclockwise
+            if cube.top[2, 1][0] == cube.right[1, 1][0]:
+                # rotate clockwise
+                cube.rotup()
+                cube.rotright()
+                cube.rotup(1)
+                cube.rotright(1)
+                cube.rotup(1)
+                cube.rotfront(1)
+                cube.rotup()
+                cube.rotfront()
+            elif cube.top[2, 1][0] == cube.left[1, 1][0]:
+                # rotate counter-clockwise
+                cube.rotup(1)
+                cube.rotleft(1)
+                cube.rotup()
+                cube.rotleft()
+                cube.rotup()
+                cube.rotfront()
+                cube.rotup(1)
+                cube.rotfront(1)
+            else:
+                assert 0
+            source_edges.remove(source_colors)
+
+        # rotate back, white on top
+        cube.rot_cube_down_cw()
+        cube.rot_cube_down_cw()
+        
