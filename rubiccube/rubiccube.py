@@ -7,19 +7,19 @@ import random
 class Rubiccube():
 
     def __init__(self):
-        #        self.top = np.array([['w', 'w', 'w'], ['w', 'w', 'w'], ['w', 'w', 'w']], dtype=str)
-        #        self.left = np.array([['o', 'o', 'o'], ['o', 'o', 'o'], ['o', 'o', 'o']], dtype=str)
-        #        self.right = np.array([['r', 'r', 'r'], ['r', 'r', 'r'], ['r', 'r', 'r']], dtype=str)
-        #        self.bottom = np.array([['y', 'y', 'y'], ['y', 'y', 'y'], ['y', 'y', 'y']], dtype=str)
-        #        self.back = np.array([['b', 'b', 'b'], ['b', 'b', 'b'], ['b', 'b', 'b']], dtype=str)
-        #        self.front = np.array([['g', 'g', 'g'], ['g', 'g', 'g'], ['g', 'g', 'g']], dtype=str)
+        self.top = np.array([['w', 'w', 'w'], ['w', 'w', 'w'], ['w', 'w', 'w']], dtype=str)
+        self.left = np.array([['o', 'o', 'o'], ['o', 'o', 'o'], ['o', 'o', 'o']], dtype=str)
+        self.right = np.array([['r', 'r', 'r'], ['r', 'r', 'r'], ['r', 'r', 'r']], dtype=str)
+        self.bottom = np.array([['y', 'y', 'y'], ['y', 'y', 'y'], ['y', 'y', 'y']], dtype=str)
+        self.back = np.array([['b', 'b', 'b'], ['b', 'b', 'b'], ['b', 'b', 'b']], dtype=str)
+        self.front = np.array([['g', 'g', 'g'], ['g', 'g', 'g'], ['g', 'g', 'g']], dtype=str)
         # Initialize rubic cube
-        self.top = np.array([['w1', 'w2', 'w3'], ['w4', 'w5', 'w6'], ['w7', 'w8', 'w9']], dtype=str)
-        self.left = np.array([['o1', 'o2', 'o3'], ['o4', 'o5', 'o6'], ['o7', 'o8', 'o9']], dtype=str)
-        self.right = np.array([['r1', 'r2', 'r3'], ['r4', 'r5', 'r6'], ['r7', 'r8', 'r9']], dtype=str)
-        self.bottom = np.array([['y1', 'y2', 'y3'], ['y4', 'y5', 'y6'], ['y7', 'y8', 'y9']], dtype=str)
-        self.back = np.array([['b1', 'b2', 'b3'], ['b4', 'b5', 'b6'], ['b7', 'b8', 'b9']], dtype=str)
-        self.front = np.array([['g1', 'g2', 'g3'], ['g4', 'g5', 'g6'], ['g7', 'g8', 'g9']], dtype=str)
+        #self.top = np.array([['w1', 'w2', 'w3'], ['w4', 'w5', 'w6'], ['w7', 'w8', 'w9']], dtype=str)
+        #self.left = np.array([['o1', 'o2', 'o3'], ['o4', 'o5', 'o6'], ['o7', 'o8', 'o9']], dtype=str)
+        #self.right = np.array([['r1', 'r2', 'r3'], ['r4', 'r5', 'r6'], ['r7', 'r8', 'r9']], dtype=str)
+        #self.bottom = np.array([['y1', 'y2', 'y3'], ['y4', 'y5', 'y6'], ['y7', 'y8', 'y9']], dtype=str)
+        #self.back = np.array([['b1', 'b2', 'b3'], ['b4', 'b5', 'b6'], ['b7', 'b8', 'b9']], dtype=str)
+        #self.front = np.array([['g1', 'g2', 'g3'], ['g4', 'g5', 'g6'], ['g7', 'g8', 'g9']], dtype=str)
 
     def print(self):
         print("front")
@@ -183,3 +183,23 @@ class Rubiccube():
                 move_history.append(self.rotleft(inv))
 
             print(move_history)
+
+    # white center points upwards, green is the front surface
+    def normalized_rotation(self):
+        if not self.top[1, 1][0] == 'w':
+            if self.right[1, 1][0] == 'w':
+                self.rot_cube_left_cw(1)
+            elif self.left[1, 1][0] == 'w':
+                self.rot_cube_left_cw()
+
+        # move white center to the top
+        for i in range(0, 4):
+            self.rot_cube_down_cw()
+            if self.top[1, 1][0] == 'w':
+                break
+
+        # move green to the front face
+        for i in range(0, 4):
+            if self.front[1, 1][0] == 'g':
+                break
+            self.rot_cube_left_cw()
