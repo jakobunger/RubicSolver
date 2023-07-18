@@ -16,7 +16,12 @@ if __name__ == '__main__':
     # Shuffle cube
     r.shuffle()
 
+    # Initial config
+    print("Initial cube state:\n")
+    r.print()
+
     # Solve rubic cube
+    r.start_logging_moves()
     s.step_1(r)
     s.step_2(r)
     s.step_3(r)
@@ -24,5 +29,12 @@ if __name__ == '__main__':
     s.step_5(r)
     s.step_6(r)
     s.step_7(r)
+    print("\n\n\nFinal cube state:\n")
     r.print()
+
+    print("\n\n\nMoves:\n")
+    moves = r.get_moves_history()
+    print("Number of moves: " + str(len(moves)) )
+    print( moves )
+    r.delete_move_history()
 

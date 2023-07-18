@@ -449,6 +449,7 @@ class Solver():
     # Fifth step of algorithm: match colors of top level edges
     def step_5(self, cube: rb):
 
+        pre_alignment = 1
         while 1:
             # check if edges already match colors
             if cube.front[0, 1][0] == cube.front[1, 1][0] and cube.right[0, 1][0] == cube.right[1, 1][0] and cube.back[2, 1][0] == cube.back[1, 1][0] and cube.left[0, 1][0] == cube.left[1, 1][0]:
@@ -467,9 +468,28 @@ class Solver():
 
             # Make sure that only one side center matches the face color
             for i in range(0, 4):
-                if cube.front[0, 1][0] == cube.front[1, 1][0] and not cube.left[0, 1][0] == cube.left[1, 1][0] and not cube.back[2, 1][0] == cube.back[1, 1][0] and not cube.right[0, 1][0] == cube.right[1, 1][0]:
-                    break
-                cube.rotup()
+                match_front = cube.front[0, 1][0] == cube.front[1, 1][0]
+                match_left = cube.left[0, 1][0] == cube.left[1, 1][0]
+                match_back = cube.back[2, 1][0] == cube.back[1, 1][0]
+                match_right = cube.right[0, 1][0] == cube.right[1, 1][0]
+                match_list = [match_front, match_right, match_front, match_left]
+
+                if pre_alignment:
+                    if sum(match_list) == 1:
+                        if match_right:
+                            cube.rot_cube_left_cw()
+                        if match_back:
+                            cube.rot_cube_left_cw()
+                            cube.rot_cube_left_cw()
+                        if match_left:
+                            cube.rot_cube_left_cw(1)
+                        break
+
+                    if (match_left and match_back) or (match_back and match_right) or (match_right and match_front) or (match_front and match_left):
+                        cube.rotup()
+
+                    if (match_front and match_back) or (match_right and match_left):
+                        cube.rotup()
 
             # Then permute the colors of the remaining top edges
             cube.rotright()
@@ -486,8 +506,9 @@ class Solver():
 
         first_run = 1
 
+        no_runs = 0
         while 1:
-
+            no_runs = no_runs + 1
             corner_tl = sorted([cube.top[0, 0][0], cube.left[0, 0][0], cube.back[2, 0][0]])
             corner_bl = sorted([cube.top[2, 0][0], cube.left[0, 2][0], cube.front[0, 0][0]])
             corner_tr = sorted([cube.top[0, 2][0], cube.right[0, 2][0], cube.back[2, 2][0]])
@@ -496,7 +517,7 @@ class Solver():
             corner_target_tl = sorted([cube.top[1, 1][0], cube.left[1, 1][0], cube.back[1, 1][0]])
             corner_target_bl = sorted([cube.top[1, 1][0], cube.left[1, 1][0], cube.front[1, 1][0]])
             corner_target_tr = sorted([cube.top[1, 1][0], cube.right[1, 1][0], cube.back[1, 1][0]])
-            corner_target_br = sorted([cube.top[1, 1][0], cube.right[1, 1][0], cube.front[0, 1][0]])
+            corner_target_br = sorted([cube.top[1, 1][0], cube.right[1, 1][0], cube.front[1, 1][0]])
 
             correct_positioned_corners = 0
             rot0 = 0
@@ -535,10 +556,13 @@ class Solver():
 
             if correct_positioned_corners > 0:
                 first_run = 0
-            else:
-                # no matching corners, rotate top row and check again
-                cube.rotup()
-                continue
+            #else:
+            #    # no matching corners, rotate top row and check again
+
+            #    continue
+
+            if no_runs > 100:
+                x=0
 
             cube.rotup()
             cube.rotright()
@@ -548,6 +572,8 @@ class Solver():
             cube.rotright(1)
             cube.rotup(1)
             cube.rotleft()
+
+
 
  # Seventh step of algorithm: Align all top corners correctly
     def step_7(self, cube: rb):
