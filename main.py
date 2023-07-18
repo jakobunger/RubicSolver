@@ -36,8 +36,8 @@ if __name__ == '__main__':
 
     print("\n\n\nMoves:\n")
     moves = r.get_moves_history()
-    print("Number of moves: " + str(len(moves)) )
-    print( moves )
+    print("Number of moves: " + str(len(moves)))
+    print(moves)
     print("\n")
     print("Processing time:  %s seconds" % (time.time() - start_time))
     r.delete_move_history()

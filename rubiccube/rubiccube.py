@@ -49,7 +49,8 @@ class Rubiccube():
             self.back[:, 0] = tempcol
             self.left = np.rot90(self.left, k=1)  # counter-clockwise
         move = "rotleft("+str(inverse)+")"
-        self.log_history.append(move)
+        if self.logging:
+            self.log_history.append(move)
         return move
 
     # Right side rotation clockwise and counter-clockwise (inverse)
@@ -69,7 +70,8 @@ class Rubiccube():
             self.front[:, 2] = tempcol
             self.right = np.rot90(self.right, k=1)  # counter-clockwise
         move = "rotright(" + str(inverse) + ")"
-        self.log_history.append(move)
+        if self.logging:
+            self.log_history.append(move)
         return
 
     # Upper side rotation clockwise and counter-clockwise (inverse)
@@ -89,7 +91,8 @@ class Rubiccube():
             self.right[0, :] = tempcol
             self.top = numpy.rot90(self.top, k=1)  # counter-clockwise
         move = "rotup(" + str(inverse) + ")"
-        self.log_history.append("rotup(" + str(inverse) + ")")
+        if self.logging:
+            self.log_history.append("rotup(" + str(inverse) + ")")
         return move
 
     # ^Lower side rotation clockwise and counter-clockwise (inverse)
@@ -109,7 +112,8 @@ class Rubiccube():
             self.left[2, :] = tempcol
             self.bottom = numpy.rot90(self.bottom, k=1)  # counter-clockwise
         move = "rotdown(" + str(inverse) + ")"
-        self.log_history.append(move)
+        if self.logging:
+            self.log_history.append(move)
         return move
 
     # Front side rotation clockwise and counter-clockwise (inverse)
@@ -129,7 +133,8 @@ class Rubiccube():
             self.left[:, 2] = np.flip(tempcol)
             self.front = np.rot90(self.front, k=1)  # counter-clockwise
         move = "rotfront(" + str(inverse) + ")"
-        self.log_history.append(move)
+        if self.logging:
+            self.log_history.append(move)
         return move
 
     # Rotate the entire cube downwards clockwise and upwards (inverse)
@@ -151,7 +156,8 @@ class Rubiccube():
             self.bottom = self.back
             self.back = tempface
         move = "rot_cube_up(" + str(inverse) + ")"
-        self.log_history.append(move)
+        if self.logging:
+            self.log_history.append(move)
         return move
 
     # Rotate the entire cube clockwise and counter-clockwise (inverse)
@@ -173,7 +179,8 @@ class Rubiccube():
             self.right = self.front
             self.front = tempface
         move = "rot_cube_left(" + str(inverse) + ")"
-        self.log_history.append(move)
+        if self.logging:
+            self.log_history.append(move)
         return move
 
     def shuffle(self):
@@ -220,13 +227,13 @@ class Rubiccube():
             self.rot_cube_left_cw()
 
     def start_logging_moves(self):
-        logging = 1
+        self.logging = 1
 
     def stop_logging_moves(self):
-        logging = 0
+        self.logging = 0
 
     def delete_move_history(self):
-        logging = 0
+        self.logging = []
 
     def get_moves_history(self):
         return self.log_history
