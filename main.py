@@ -2,6 +2,7 @@
 
 import rubiccube.rubiccube as rc
 import rubiccube.solver as sol
+import time
 import numpy as np
 
 
@@ -22,13 +23,14 @@ if __name__ == '__main__':
 
     # Solve rubic cube
     r.start_logging_moves()
-    s.step_1(r)
-    s.step_2(r)
-    s.step_3(r)
-    s.step_4(r)
-    s.step_5(r)
-    s.step_6(r)
-    s.step_7(r)
+    start_time = time.time()
+    s.step_1(r) # white cross
+    s.step_2(r) # complete white side (position + alignment)
+    s.step_3(r) # complete mid-level edges
+    s.step_4(r) # yellow cross
+    s.step_5(r) # positioning of top-level edges
+    s.step_6(r) # positioning of top-level corners
+    s.step_7(r) # alignment of top-level corners
     print("\n\n\nFinal cube state:\n")
     r.print()
 
@@ -36,5 +38,7 @@ if __name__ == '__main__':
     moves = r.get_moves_history()
     print("Number of moves: " + str(len(moves)) )
     print( moves )
+    print("\n")
+    print("Processing time:  %s seconds" % (time.time() - start_time))
     r.delete_move_history()
 

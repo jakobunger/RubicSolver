@@ -179,7 +179,7 @@ class Rubiccube():
     def shuffle(self):
         no_of_moves = random.randint(30, 100)
         for i in range(1, no_of_moves):
-            move = random.randint(0, 4)
+            move = random.randint(0, 6)
             inv = random.randint(0, 1)
             move_history = []
             if move == 0:
@@ -192,6 +192,12 @@ class Rubiccube():
                 move_history.append(self.rotup(inv))
             elif move == 4:
                 move_history.append(self.rotleft(inv))
+            elif move == 5:
+                move_history.append(self.rot_cube_left_cw(inv))
+            elif move == 6:
+                move_history.append(self.rot_cube_down_cw(inv))
+
+
 
     # white center points upwards, green is the front surface
     def normalized_rotation(self):
